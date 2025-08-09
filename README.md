@@ -1,61 +1,69 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## About Mailchimp sync contact in Google SpreadSheet
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Build an integration using Laravel that syncs contact data from Mailchimp to a Google Sheet in two
+scenarios:
+#1. Real-time sync – when a new contact is created in Mailchimp.
+#2. Historical sync – import all existing contacts from Mailchimp.
 
-## About Laravel
+##Setup Instructions
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+#1 Download/Clone this repo
+git clone https://github.com/achchhelalMaddheshiya/mailchimpsync.git
+cd mailchimpsync
 
--   [Simple, fast routing engine](https://laravel.com/docs/routing).
--   [Powerful dependency injection container](https://laravel.com/docs/container).
--   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
--   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
--   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
--   [Robust background job processing](https://laravel.com/docs/queues).
--   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#2. Laravel Setup
+composer install
+cp .env.example .env
+php artisan key:generate
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#3. Storage & Database
+Run composer for oackege installation
+_composer install_
+#Link with storage save cache and logs
+_php artisan storage:link_
+#Database migration like jobs, failed job etc
+_php artisan migrate_
 
-## Learning Laravel
+You can see the some mailchimp emaded form (You can replace it with your emaded form from welcome.blade.php file)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+##Setup Google Services
+Login->https://console.cloud.google.com/
+You can create(No projects) => + New Project
+Dashboard => https://console.cloud.google.com/home/dashboard
+Goto => IAM & Admin > Service Accounts > Create Service Accounts
+Api & Servive => https://console.cloud.google.com/apis/dashboard
+Enable API & Services and Add Service => Google Sheets API
+Assign your Google sheet to your service account => google**\***.gserviceaccount.com
+#Service Accounts download json key > google-auth\*.json
+Goto > Service Accounts > Action > Manage key> Add key <-- It autodown json key save in
+#Add GOOGLE_SHEET_ID get id from the spreadsheet
+url: https://docs.google.com/spreadsheets/d/**Sheet_ID**/edit
+GOOGLE_SHEET_ID=Sheet_ID
+#Add GOOGLE_SERVICE_ACCOUNT_JSON
+GOOGLE_SERVICE_ACCOUNT_JSON= storage/app/google-service-account.json
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+##Mailchimp Setuo API Key
+#Create account > Profile > Account & billing > Extra > API Key > Create API key
+Placce API key in .env MAILCHIMP_API_KEY
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Add server prefix it will shown on url or End in API like 'us21' seprate from -
 
-## Laravel Sponsors
+MAILCHIMP_SERVER_PREFIX=us17
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Add MAILCHIMP_LIST_ID
 
-### Premium Partners
+Goto > Audience > More options > Audience Setting >Audience ID
+MAILCHIMP_LIST_ID=Audience ID
+#Addd MAILCHIMP_WEBHOOK_SECRET for validation or You can add for specific IP
+Make your custom key and then append webhooke_url?secretkey=Custom_key_for_validate
 
--   **[Vehikl](https://vehikl.com)**
--   **[Tighten Co.](https://tighten.co)**
--   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
--   **[64 Robots](https://64robots.com)**
--   **[Curotec](https://www.curotec.com/services/technologies/laravel)**
--   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
--   **[Redberry](https://redberry.international/laravel-development)**
--   **[Active Logic](https://activelogic.com)**
+## Run command for add all contacts list in Google Sheet
 
-## Contributing
+_php artisan queue:work_
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# It will add automaticaly your google sheet, email, first name, last name, tags
 
-## Code of Conduct
+_php artisan sync:mailchimp-contacts_
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#Demo Google Shee
+https://docs.google.com/spreadsheets/d/14vxNf8XclW7vJNSWs9VP0ZRXErF7nArBdayh_vU_RYM/edit?usp=sharing
