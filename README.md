@@ -11,18 +11,18 @@ This application integrates Mailchimp with Google Sheets in two scenarios:
 
 ### 1. Download / Clone the Repository
 
-_git clone https://github.com/achchhelalMaddheshiya/mailchimpsync.git_
+_git clone https://github.com/achchhelalMaddheshiya/mailchimpsync.git_<br>
 _cd mailchimpsync_
 
 ### 2. Laravel Setup
 
-_composer install_
-_cp .env.example .env_
+_composer install_<br>
+_cp .env.example .env_<br>
 _php artisan key:generate_
 
 ### 3. Storage & Database Setup
 
-_php artisan storage:link_
+_php artisan storage:link_<br>
 _php artisan migrate_
 
 > The project includes an example Mailchimp embedded form in `welcome.blade.php`. You can replace it with your own Mailchimp embed form code.
@@ -43,7 +43,7 @@ _php artisan migrate_
     - Example: https://docs.google.com/spreadsheets/d/<GOOGLE_SHEET_ID>/edit
 8. Add the following to your `.env` file:
 
-    GOOGLE_SHEET_ID=your_google_sheet_id
+    GOOGLE_SHEET_ID=your_google_sheet_id<br>
     GOOGLE_SERVICE_ACCOUNT_JSON=storage/app/google-service-account.json
 
 ### 5. Mailchimp Setup
@@ -51,38 +51,33 @@ _php artisan migrate_
 1. Get your API Key:
 
     - Profile → Account & Billing → Extras → API Keys → Create Key.
-    - Add to `.env`:
-
-        MAILCHIMP_API_KEY=your_api_key
+    - Add to `.env`:<br>
+      MAILCHIMP_API_KEY=your_api_key
 
 2. Get your Server Prefix (found in the Mailchimp API URL, e.g., us17):
    MAILCHIMP_SERVER_PREFIX=us17
-3. Get your Audience/List ID:
+3. Get your Audience/List ID:<br>
 
     - Audience → Settings → Audience ID.
-    - Add to `.env`:
+    - Add to `.env`:<br>
+      MAILCHIMP_LIST_ID=your_list_id
 
-        MAILCHIMP_LIST_ID=your_list_id
-
-4. Set a Webhook Secret for validation:
-
-    MAILCHIMP_WEBHOOK_SECRET=your_custom_secret
+4. Set a Webhook Secret for validation:<br>
+   MAILCHIMP_WEBHOOK_SECRET=your_custom_secret
 
 5. Create the Webhook in Mailchimp:
     - Audience → Settings → Webhooks → Add Webhook.
-    - Webhook URL:
-      https://your-domain.com/mailchimp/webhook?secret=your_custom_secret
+    - Webhook URL:<br>
+      https://your-domain.com/mailchimp/webhook?secret=your_custom_secret<br>
     - Select only Subscribe events.
 
 ### 6. Running the Sync
 
 Start the Queue Worker:
 
-_php artisan queue:work_
-
-Run All Contacts Sync (Import all existing contacts):
-
-_php artisan sync:mailchimp-contacts_
+_php artisan queue:work_<br>
+Run All Contacts Sync (Import all existing contacts):<br>
+_php artisan sync:mailchimp-contacts_<br>
 
 > Adds Email, First Name, Last Name, and Tags to your Google Sheet.
 
