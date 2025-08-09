@@ -1,69 +1,92 @@
-## About Mailchimp sync contact in Google SpreadSheet
+## Mailchimp → Google Sheets Contact Sync (Laravel)
 
-Build an integration using Laravel that syncs contact data from Mailchimp to a Google Sheet in two
-scenarios:
-#1. Real-time sync – when a new contact is created in Mailchimp.
-#2. Historical sync – import all existing contacts from Mailchimp.
+This Laravel application integrates Mailchimp with Google Sheets in two scenarios:
 
-##Setup Instructions
+1. **Real-time sync** – Automatically adds a new contact to Google Sheets when created in Mailchimp.
+2. **Historical sync** – Imports all existing contacts from Mailchimp to Google Sheets.
 
-#1 Download/Clone this repo
+---
+
+## Setup Instructions
+
+### 1. Download / Clone the Repository
+
 git clone https://github.com/achchhelalMaddheshiya/mailchimpsync.git
 cd mailchimpsync
 
-#2. Laravel Setup
+### 2. Laravel Setup
+
 composer install
 cp .env.example .env
 php artisan key:generate
 
-#3. Storage & Database
-Run composer for oackege installation
-_composer install_
-#Link with storage save cache and logs
-_php artisan storage:link_
-#Database migration like jobs, failed job etc
-_php artisan migrate_
+### 3. Storage & Database Setup
 
-You can see the some mailchimp emaded form (You can replace it with your emaded form from welcome.blade.php file)
+php artisan storage:link
+php artisan migrate
 
-##Setup Google Services
-Login->https://console.cloud.google.com/
-You can create(No projects) => + New Project
-Dashboard => https://console.cloud.google.com/home/dashboard
-Goto => IAM & Admin > Service Accounts > Create Service Accounts
-Api & Servive => https://console.cloud.google.com/apis/dashboard
-Enable API & Services and Add Service => Google Sheets API
-Assign your Google sheet to your service account => google**\***.gserviceaccount.com
-#Service Accounts download json key > google-auth\*.json
-Goto > Service Accounts > Action > Manage key> Add key <-- It autodown json key save in
-#Add GOOGLE_SHEET_ID get id from the spreadsheet
-url: https://docs.google.com/spreadsheets/d/**Sheet_ID**/edit
-GOOGLE_SHEET_ID=Sheet_ID
-#Add GOOGLE_SERVICE_ACCOUNT_JSON
-GOOGLE_SERVICE_ACCOUNT_JSON= storage/app/google-service-account.json
+> The project includes an example Mailchimp embedded form in `welcome.blade.php`. You can replace it with your own Mailchimp embed form code.
 
-##Mailchimp Setuo API Key
-#Create account > Profile > Account & billing > Extra > API Key > Create API key
-Placce API key in .env MAILCHIMP_API_KEY
+### 4. Google Services Setup
 
-# Add server prefix it will shown on url or End in API like 'us21' seprate from -
+1. Login to Google Cloud Console → https://console.cloud.google.com/
+2. Create a New Project (if none exists).
+3. Enable Google Sheets API:
+    - APIs & Services → Enable APIs & Services → Search "Google Sheets API" → Enable.
+4. Create a Service Account:
+    - IAM & Admin → Service Accounts → Create Service Account.
+5. Generate & download the JSON Key:
+    - Service Account → Actions → Manage Keys → Add Key → JSON.
+    - Save it to: `storage/app/google-service-account.json`
+6. Share your Google Sheet with the Service Account email (something like `xxxx@xxxx.iam.gserviceaccount.com`) → Give Editor access.
+7. Get your Google Sheet ID from the URL:
+    - Example: https://docs.google.com/spreadsheets/d/<GOOGLE_SHEET_ID>/edit
+8. Add the following to your `.env` file:
+   GOOGLE_SHEET_ID=your_google_sheet_id
+   GOOGLE_SERVICE_ACCOUNT_JSON=storage/app/google-service-account.json
 
-MAILCHIMP_SERVER_PREFIX=us17
+### 5. Mailchimp Setup
 
-# Add MAILCHIMP_LIST_ID
+1. Get your API Key:
+    - Profile → Account & Billing → Extras → API Keys → Create Key.
+    - Add to `.env`:
+      MAILCHIMP_API_KEY=your_api_key
+2. Get your Server Prefix (found in the Mailchimp API URL, e.g., us17):
+   MAILCHIMP_SERVER_PREFIX=us17
+3. Get your Audience/List ID:
+    - Audience → Settings → Audience ID.
+    - Add to `.env`:
+      MAILCHIMP_LIST_ID=your_list_id
+4. Set a Webhook Secret for validation:
+   MAILCHIMP_WEBHOOK_SECRET=your_custom_secret
+5. Create the Webhook in Mailchimp:
+    - Audience → Settings → Webhooks → Add Webhook.
+    - Webhook URL:
+      https://your-domain.com/mailchimp/webhook?secret=your_custom_secret
+    - Select only Subscribe events.
 
-Goto > Audience > More options > Audience Setting >Audience ID
-MAILCHIMP_LIST_ID=Audience ID
-#Addd MAILCHIMP_WEBHOOK_SECRET for validation or You can add for specific IP
-Make your custom key and then append webhooke_url?secretkey=Custom_key_for_validate
+### 6. Running the Sync
 
-## Run command for add all contacts list in Google Sheet
+Start the Queue Worker:
+php artisan queue:work
 
-_php artisan queue:work_
+> Handles real-time sync from Mailchimp to Google Sheets.
 
-# It will add automaticaly your google sheet, email, first name, last name, tags
+Run Historical Sync (Import all existing contacts):
+php artisan sync:mailchimp-contacts
 
-_php artisan sync:mailchimp-contacts_
+> Adds Email, First Name, Last Name, and Tags to your Google Sheet.
 
-#Demo Google Shee
+---
+
+## Demo Google Sheet
+
 https://docs.google.com/spreadsheets/d/14vxNf8XclW7vJNSWs9VP0ZRXErF7nArBdayh_vU_RYM/edit?usp=sharing
+
+---
+
+## Notes
+
+-   Real-time sync works only for new contacts added through Mailchimp forms or API.
+-   Historical sync fetches all contacts from your Mailchimp audience.
+-   All sync operations run asynchronously via Laravel Queues.
