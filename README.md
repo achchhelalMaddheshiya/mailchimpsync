@@ -91,6 +91,6 @@ https://docs.google.com/spreadsheets/d/14vxNf8XclW7vJNSWs9VP0ZRXErF7nArBdayh_vU_
 
 ## Notes
 
--   Real-time sync works only for new contacts added through Mailchimp forms.
--   Historical sync fetches all contacts from your Mailchimp audience.
+-   Real-time sync works only for new contacts added in Mailchimp.
+-   Historical sync fetches all existing contacts from your Mailchimp audience.
 -   All sync operations run asynchronously via Laravel Queues.
