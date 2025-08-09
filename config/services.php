@@ -34,5 +34,14 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'google' => [
+        'sheet_id' => env('GOOGLE_SHEET_ID'),
+        'credentials_path' => env('GOOGLE_SERVICE_ACCOUNT_JSON'),
+    ],
+    'mailchimp' => [
+        'api_key' => env('MAILCHIMP_API_KEY'),
+        'server_prefix' => env('MAILCHIMP_SERVER_PREFIX'),
+        'list_id' => env('MAILCHIMP_LIST_ID'),
+        'webhookkey' => env('MAILCHIMP_WEBHOOK_SECRET'),
+    ],
 ];
