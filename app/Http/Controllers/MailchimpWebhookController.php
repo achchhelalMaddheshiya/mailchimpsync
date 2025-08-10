@@ -9,8 +9,10 @@ use Illuminate\Support\Str;
 
 class MailchimpWebhookController extends Controller
 {
-    public function __invoke(Request $request)
+
+    public function handle(Request $request)
     {
+        dd($request->all());
         try {
             // Verify secret for security
             if ($request->query('secretkey') !== config('services.mailchimp.webhookkey')) {
