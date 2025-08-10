@@ -33,20 +33,20 @@ class SyncMailchimpContacts extends Command
             foreach ($members as $member) {
 
                 if ($member['status'] !== 'subscribed') continue;
-                try {
-                    $contact = [
-                        'email' => $member['email_address'],
-                        'first_name' => $member['merge_fields']['FNAME'] ?? '',
-                        'last_name' => $member['merge_fields']['LNAME'] ?? '',
-                        'signup_date' => $member['timestamp_opt'] ? date('Y-d-m h:i:s', strtotime($member['timestamp_opt'])) : '',
-                        'tags' => implode(',', $this->gettags($member['tags']))
-                    ];
-                    Log::info('$member :: ', $contact);
-                    SyncContactToSheet::dispatch($contact);
-                } catch (\Throwable $th) {
+                /*try {*/
+                $contact = [
+                    'email' => $member['email_address'],
+                    'first_name' => $member['merge_fields']['FNAME'] ?? '',
+                    'last_name' => $member['merge_fields']['LNAME'] ?? '',
+                    'signup_date' => $member['timestamp_opt'] ? date('Y-d-m h:i:s', strtotime($member['timestamp_opt'])) : '',
+                    'tags' => implode(',', $this->gettags($member['tags']))
+                ];
+                Log::info('$member :: ', $contact);
+                SyncContactToSheet::dispatch($contact);
+                /*} catch (\Throwable $th) {
                     Log::info('failed contact  :: ', $member['email_address']);
                     continue;
-                }
+                }*/
             }
 
             $offset += $count;

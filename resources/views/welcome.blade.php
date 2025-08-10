@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<script id="mcjs">
+    ! function(c, h, i, m, p) {
+        m = c.createElement(h), p = c.getElementsByTagName(h)[0], m.async = 1, m.src = i, p.parentNode.insertBefore(m, p)
+    }(document, "script", "https://chimpstatic.com/mcjs-connected/js/users/daefb3a5871733fc8a1f18d2f/568bca50e748893f87ee9d6c7.js");
+</script>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Mailchimp Sync</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
