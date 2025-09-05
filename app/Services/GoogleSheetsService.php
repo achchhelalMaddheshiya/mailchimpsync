@@ -28,8 +28,6 @@ class GoogleSheetsService
     // Append Rows in Shredsheet
     public function appendRow(array $values, string $range = 'Sheet1')
     {
-        // dd($values);
-        // if (!$this->contactExists($values[0], 'Sheet1')) {
         $body = new Google_Service_Sheets_ValueRange([
             'values' => [$values],
         ]);
@@ -42,11 +40,6 @@ class GoogleSheetsService
             $body,
             $params
         );
-        // } else {
-        //     // Already exist contacts
-        //     Log::info(' Contact-already exist:: .' . json_encode($values));
-        //     return true;
-        // }
     }
 
     //get spreadsheet values
@@ -60,7 +53,6 @@ class GoogleSheetsService
     public function contactExists(string $email, string $range = 'Sheet1!A2:A')
     {
         $rows = $this->getSheetValues($range);
-        Log::info('contactExists :: ', $rows);
         foreach ($rows as $row) {
             if (isset($row[0]) && strtolower($row[0]) === strtolower($email)) {
                 return true;

@@ -16,13 +16,11 @@ class MailchimpWebhookController extends Controller
         try {
             // Verify secret for security
             if ($request->query('secretkey') !== config('services.mailchimp.webhookkey')) {
-                Log::warning("Unauthorized webhook access", ['request' => $request->all()]);
                 return response('OK', 200); // Always return 200 to prevent Mailchimp from disabling
             }
             // Mailchimp sends different event types; we want "subscribe"
             if ($request->input('type') === 'subscribe') {
                 $data = $request->input('data', []);
-                // Log::info("webhooks log data => ",$data['tags']);
                 $contact = [
                     'email' => $data['email'],
                     'first_name' => $data['merges']['FNAME'] ?? '',
