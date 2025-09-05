@@ -12,7 +12,7 @@ class MailchimpWebhookController extends Controller
 
     public function handle(Request $request)
     {
-        dd($request->all());
+        // return true;
         try {
             // Verify secret for security
             if ($request->query('secretkey') !== config('services.mailchimp.webhookkey')) {
@@ -22,15 +22,16 @@ class MailchimpWebhookController extends Controller
             // Mailchimp sends different event types; we want "subscribe"
             if ($request->input('type') === 'subscribe') {
                 $data = $request->input('data', []);
+                // Log::info("webhooks log data => ",$data['tags']);
                 $contact = [
                     'email' => $data['email'],
                     'first_name' => $data['merges']['FNAME'] ?? '',
                     'last_name' => $data['merges']['LNAME'] ?? '',
-                    'signup_date' => now()->toDateString(),
-                    'tags' => implode(',', $this->gettags($data['tags'])) //implode(',', $data['tags'] ?? []),
+                    'signup_date' => now()->toDateTimeString(),
+                    'tags' => isset($data['tags'])?implode(',', $this->gettags($data['tags'])):'' //implode(',', $data['tags'] ?? []),
                 ];
                 SyncContactToSheet::dispatch($contact);
-                Log::info("webhooks log email :: " . $data['email']);
+
             } else {
                 Log::info("webhooks log data => ", $request->all());
             }
