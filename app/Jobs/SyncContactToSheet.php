@@ -17,7 +17,6 @@ class SyncContactToSheet implements ShouldQueue
 
     public function handle(GoogleSheetsService $sheets)
     {
-        Log::info('Processing contact: ' . $this->contact['email']);
         if (!$sheets->contactExists($this->contact['email'], 'Sheet1')) {
             $sheets->appendRow([
                 $this->contact['email'],
