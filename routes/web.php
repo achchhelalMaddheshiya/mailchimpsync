@@ -10,4 +10,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/mailchimp/webhook', [MailchimpWebhookController::class, 'handle']);
+
+// At Verify time
 // Route::match(['get', 'post'], '/mailchimp/webhook', [MailchimpWebhookController::class,'handle']);
